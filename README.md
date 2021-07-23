@@ -17,7 +17,7 @@ mvn clean install
 Step for configuration:
 - Create new database in postgresql with database name `demo_jwt_auth`
 - Set database name, user, and password in `application-properties`
-- Create table `sec_roles`, `sec_users`, and `sec_user_roles`
+- Create table `sec_roles`, `sec_users`, `sec_refresh_token`, and `sec_user_roles`
 ```sh 
     create table sec_roles(
         id bigserial primary key,
@@ -38,6 +38,14 @@ Step for configuration:
         CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES sec_users(id),
         CONSTRAINT fk_role FOREIGN KEY(role_id) REFERENCES sec_roles(id)
     );
+    
+    create table sec_refresh_token(
+        id bigserial primary key,
+        user_id int8,
+        token varchar,
+        expiry_date timestamp,
+        CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES sec_users(id)
+    )
 ```
 - Seeding data for table `sec_roles`
 ```sh 
@@ -78,6 +86,17 @@ Content-Length: 62
 {
     "username": "saptarga",
     "password": "123456789"
+}
+```
+Get Refresh Token 
+```sh
+POST /api/auth/refresh-token HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Content-Length: 64
+
+{
+    "refreshToken": {{your_refresh_token}}
 }
 ```
 

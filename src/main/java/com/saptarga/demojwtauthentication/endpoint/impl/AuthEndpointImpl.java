@@ -1,15 +1,16 @@
 package com.saptarga.demojwtauthentication.endpoint.impl;
 
-import com.saptarga.demojwtauthentication.dto.RequestLoginDto;
-import com.saptarga.demojwtauthentication.dto.RequestRegisterUserDto;
-import com.saptarga.demojwtauthentication.dto.ResponseLoginDto;
+import com.saptarga.demojwtauthentication.dto.*;
 import com.saptarga.demojwtauthentication.endpoint.IAuthEndpoint;
 import com.saptarga.demojwtauthentication.entity.AppUser;
+import com.saptarga.demojwtauthentication.entity.RefreshToken;
 import com.saptarga.demojwtauthentication.entity.Role;
 import com.saptarga.demojwtauthentication.entity.User;
+import com.saptarga.demojwtauthentication.exception.TokenRefreshException;
 import com.saptarga.demojwtauthentication.repository.RoleRepository;
 import com.saptarga.demojwtauthentication.repository.UserRepository;
 import com.saptarga.demojwtauthentication.security.jwt.JwtUtils;
+import com.saptarga.demojwtauthentication.service.IRefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,6 +42,9 @@ public class AuthEndpointImpl implements IAuthEndpoint {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    IRefreshTokenService refreshTokenService;
 
     @Override
     public ResponseEntity<String> registerUser(RequestRegisterUserDto request) {
@@ -84,11 +88,29 @@ public class AuthEndpointImpl implements IAuthEndpoint {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
         return ResponseEntity.ok(new ResponseLoginDto(jwt,
+                refreshToken.getToken(),
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
                 roles));
+    }
+
+    @Override
+    public ResponseEntity<?> refreshtoken(RequestRefreshToken request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+                    return ResponseEntity.ok(new ResponseRefreshToken(token, requestRefreshToken));
+                })
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                        "Refresh token is not in database!"));
     }
 
 }

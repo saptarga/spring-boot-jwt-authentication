@@ -1,6 +1,7 @@
 package com.saptarga.demojwtauthentication.endpoint;
 
 import com.saptarga.demojwtauthentication.dto.RequestLoginDto;
+import com.saptarga.demojwtauthentication.dto.RequestRefreshToken;
 import com.saptarga.demojwtauthentication.dto.RequestRegisterUserDto;
 import com.saptarga.demojwtauthentication.dto.ResponseLoginDto;
 import org.springframework.http.MediaType;
@@ -19,5 +20,8 @@ public interface IAuthEndpoint {
 
     @PostMapping("/login")
     ResponseEntity<ResponseLoginDto> loginUser(@RequestBody RequestLoginDto requestLoginDto);
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshtoken(@RequestBody RequestRefreshToken request);
 
 }
