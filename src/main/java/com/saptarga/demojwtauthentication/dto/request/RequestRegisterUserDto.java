@@ -1,4 +1,4 @@
-package com.saptarga.demojwtauthentication.dto;
+package com.saptarga.demojwtauthentication.dto.request;
 
 import com.saptarga.demojwtauthentication.statval.ERole;
 

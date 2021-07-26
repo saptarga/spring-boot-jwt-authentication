@@ -1,6 +1,10 @@
 package com.saptarga.demojwtauthentication.endpoint.impl;
 
-import com.saptarga.demojwtauthentication.dto.*;
+import com.saptarga.demojwtauthentication.dto.request.RequestLoginDto;
+import com.saptarga.demojwtauthentication.dto.request.RequestRefreshToken;
+import com.saptarga.demojwtauthentication.dto.request.RequestRegisterUserDto;
+import com.saptarga.demojwtauthentication.dto.response.ResponseLoginDto;
+import com.saptarga.demojwtauthentication.dto.response.ResponseRefreshToken;
 import com.saptarga.demojwtauthentication.endpoint.IAuthEndpoint;
 import com.saptarga.demojwtauthentication.entity.AppUser;
 import com.saptarga.demojwtauthentication.entity.RefreshToken;
@@ -99,7 +103,7 @@ public class AuthEndpointImpl implements IAuthEndpoint {
     }
 
     @Override
-    public ResponseEntity<?> refreshtoken(RequestRefreshToken request) {
+    public ResponseEntity<ResponseRefreshToken> refreshtoken(RequestRefreshToken request) {
         String requestRefreshToken = request.getRefreshToken();
 
         return refreshTokenService.findByToken(requestRefreshToken)

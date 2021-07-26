@@ -1,4 +1,4 @@
-package com.saptarga.demojwtauthentication.advice;
+package com.saptarga.demojwtauthentication.exception;
 
 import java.util.Date;
 

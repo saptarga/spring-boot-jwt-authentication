@@ -1,4 +1,4 @@
-package com.saptarga.demojwtauthentication.dto;
+package com.saptarga.demojwtauthentication.dto.response;
 
 public class ResponseRefreshToken {
 
