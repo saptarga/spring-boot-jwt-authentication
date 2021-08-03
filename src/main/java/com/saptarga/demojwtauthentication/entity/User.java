@@ -24,6 +24,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "status_login")
+    private Boolean statusLogin;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "sec_user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -37,6 +40,14 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public Boolean getStatusLogin() {
+        return statusLogin;
+    }
+
+    public void setStatusLogin(Boolean statusLogin) {
+        this.statusLogin = statusLogin;
     }
 
     public Long getId() {
