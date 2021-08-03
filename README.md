@@ -28,7 +28,8 @@ Step for configuration:
         id bigserial primary key,
         username varchar UNIQUE,
         email varchar UNIQUE,
-        password varchar
+        password varchar,
+        status_login boolean default false
     );
 
     create table sec_user_roles(
